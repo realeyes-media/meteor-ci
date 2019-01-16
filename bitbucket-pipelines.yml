@@ -1,0 +1,20 @@
+# This will build the Meteor app in a way that a standard NodeJS server can run.
+# We build to the ./build folder, so cache that for future steps.
+image: quay.io/realeyes/meteor-ci
+pipelines:
+  custom:
+    MeteorBuild
+    - step:
+        name: Build Meteor App
+        image: quay.io/realeyes/meteor-ci
+        caches:
+        - meteor
+        script:
+        # Meteor deps and build
+        - meteor npm install
+        - meteor build --server-only --directory ${BITBUCKET_CLONE_DIR}/build
+        artifacts:
+        - build
+definitions:
+  caches:
+    meteor: /root
